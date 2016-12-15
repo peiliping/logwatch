@@ -3,9 +3,11 @@ local MONTHS = {Jan = 1 , Feb = 2 , Mar = 3 , Apr = 4 , May = 5 , Jun =6 , Jul =
 
 local parserconfig = {}
 
+--创建下面两个ctr主要是为了复用，减少创建table、resizetable的开销，提高性能
 local timeformatCtrTS = {year = nil , month = nil , day = nil , hour = nil , min = nil , sec = nil}
 local timeformatCtrFD = {nil , '/' , nil , '/' , nil , ' ' , nil , ':' , nil , ':' , nil}
 
+--字段格式转化函数列表
 local convertFunctions = {
     number = tonumber ,
     ngxtimeformatTS = function(w) 
@@ -27,6 +29,10 @@ local convertFunctions = {
             return table.concat(timeformatCtrFD , '')
         end ,
 }
+
+--config的key值，可以用在logwatchcofig.lua中，作为task的rule
+--regex和mapping需要同时提供，如果配置grok则不需要配置regex和mapping
+--如果没有格式转化要求，conversion可以不填写
 local config = {
     rawlog = {
         regex = '(.*)' ,
