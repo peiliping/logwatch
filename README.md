@@ -1,52 +1,92 @@
-logwatch
-==========
+Logwatch
+----------
 
-1) 用途：采集日志，通过正则或其他方式进行解析，build成Json，发送到Kafka。
+### 简介
 
-2) 同类：Flume，Logstash等
+1. 用途
 
-3) 简介：Lua语言编写，主要依赖cjson(https://github.com/mpx/lua-cjson/)、luardkafka(https://github.com/mistsv/luardkafka)、librdkafka(https://github.com/edenhill/librdkafka) ，luajit（http://luajit.org/download.html）
+    采集Linux服务器上的应用日志，通过正则或其他方式进行解析，build成Json，发送到Kafka
 
-4) 优势：资源占用少，性能优异（NginxLog，每秒处理4W行，Java应用Log每秒百万行以上），通过协程来进行多任务的调度，最多占用1个CPU Core
+2. 同类
 
-5) 仅支持Linux操作系统，文本类型的日志文件，换行符号为\n
+    Flume、Logstash等
+
+3. 技术
+
+    Logwatch采用Lua语言编写，主要依赖有：[cjson](https://github.com/mpx/lua-cjson/)、[luardkafka](https://github.com/mistsv/luardkafka)、[librdkafka](https://github.com/edenhill/librdkafka)、[luajit](http://luajit.org/download.html)
+
+4. 优势
+
+    资源占用少(1 cpu core , 128m memory)，性能优异
+
+    测试结果证明，NginxAccessLog每秒可以处理4万行，Java应用Log每秒可以处理百万
+
+    通过协程来进行多任务的调度，最多占用1个Cpu Core，其中Lua正则表达式中的非贪婪匹配(.-)，对性能的提升有很大帮助
+
+### 安装
+
+1. 编译安装Luajit（LuaJIT-2.1.0-beta2）
+
+    安装后需要为/usr/local/bin/luajit-2.1.0-beta2创建一个link（/usr/local/bin/luajit），保证luajit命令可用
+
+2. 编译安装librdkafka（0.9.2）
+
+    安装后需要为创建一个link /usr/lib64/librdkafka.so.1 -> /安装目录/librdkafka-0.9.2/lib/librdkafka.so.1
+
+3. 编译安装cjson
+
+    将编译好的cjson.so放在luajit能够找到的lib路径下即可
+
+4. 安装luardkafka
+
+    luardkafka的代码在rdkafka目录下，不需要单独安装，其中produce的接口做了少量改动，处理一些异常情况
 
 
-安装
-==========
+### 代码结构
 
-1) 编译安装Luajit（LuaJIT-2.1.0-beta2），安装后需要为/usr/local/bin/luajit-2.1.0-beta2创建一个link（/usr/local/bin/luajit），保证luajit命令可用。
+1. agent.lua
 
-2) 编译安装librdkafka（0.9.2），安装后需要为创建一个link /usr/lib64/librdkafka.so.1 -> /安装目录/librdkafka-0.9.2/lib/librdkafka.so.1
+    程序启动入口，负责初始化任务和调度执行
 
-3) 编译安装cjson，将编译好的cjson.so放在luajit能够找到的lib路径下即可。
+2. watchlog*.lua
 
-4) luardkafka项目已经放在本项目的工程里了，不需要单独安装，对其produce接口做了少量改动，处理一些异常情况。
+    多种类型文件处理的具体实现，其中watchlogfilesingleline.lua为基类，多行日志解析也是在其基础上完成
+
+3. kafkaclient.lua
+
+    封装的kafkaclient，包括初始化和容错等
+
+4. util.lua
+
+    简单的函数工具类
+
+5. conf目录
+
+    存放logwatch的配置
+
+6. z_t_*.lua
+
+    测试用的代码
 
 
-代码结构
-==========
+### 配置说明
 
-1) agent.lua为程序启动入口，完成初始化任务和调度执行工作
+1. conf/kafkaconfig.lua
 
-2) watchlog*.lua为多种类型文件处理的具体实现
+    配置关于Kafka的参数，必须要填写brokers，还有topics里面的default
 
-3) kafkaclient.lua为封装的kafkaclient，包括初始化和容错等 
+    logwatch不支持同时发送到多个Kafka集群，可以支持发送到同一个Kafka集群的不同topic
 
-4) util.lua你懂的
+    默认发送到default，可以在logwatchconfig.lua里针对日志文件配置要发送的topic
 
-5) conf目录下是logwatch的配置存放路径
+2. conf/tunningconfig.lua
 
-6) z_t_*.lua是测试用的代码
+    配置logwatch的一些常量，具体含义参见代码注释
 
+3. conf/parseconfig.lua
 
-配置说明
-==========
+    配置日志解析的正则、字段命名、转化函数等，其中的grok字段，是针对简单日志类型提供的便捷配置方法
 
-1) conf/kafkaconfig.lua用来配置关于kafka的参数，必须要填写brokers，还有topics里面的default，logwatch不支持同时发送到多个kafka集群，可以支持发送到一个kafka集群的不同topic，默认发送到default，也可以在logwatchconfig.lua里针对日志文件进行配置发送的topic。
+4. conf/logwatchconfig.lua
 
-2) conf/tunningconfig.lua用来配置logwatch的一些常量，具体含义参见代码注释
-
-3) conf/parseconfig.lua用来配置日志解析的正则、字段命名、转化函数等，其中的grok字段，是针对简单日志类型提供的便捷配置方法。
-
-4) conf/logwatchconfig.lua，需要根据采集的日志文件情况进行就编写，可以参考z_t_logwatchconfig.lua的内容
+    需要根据采集的日志文件情况进行编写，可以参考z_t_logwatchconfig.lua的例子
