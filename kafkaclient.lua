@@ -2,6 +2,7 @@ local kafkaConfig = require 'rdkafka.config'
 local kafkaProducer = require 'rdkafka.producer'
 local kafkaTopicConfig = require 'rdkafka.topic_config'
 local kafkaTopic = require 'rdkafka.topic'
+local util = require 'util'
 
 local string_len = string.len
 
@@ -64,7 +65,7 @@ function kafkaclient.safeSendMsg(topic , key , msg , retrytimes)
         return
     else
         print(errorinfo)
-        os.execute ("sleep 1")
+        util.sleep(1)
         if retrytimes > 0 then
             kafkaclient.safeSendMsg(topic , key , msg , retrytimes - 1)
         end
