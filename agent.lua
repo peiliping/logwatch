@@ -33,8 +33,8 @@ local function createCollectThread(kafkaClient , task , customParserConfig , tun
 end
 
 local function dispatch(threads , metrics , tunningConfig)
-    local coroutine_resume , os_exec = coroutine.resume , os.execute
-    local NO_DATA_INTERVAL_STR = "sleep " .. tunningConfig.getconfig().NO_DATA_INTERVAL
+    local coroutine_resume = coroutine.resume
+    local NO_DATA_INTERVAL = tunningConfig.getconfig().NO_DATA_INTERVAL
     local msgCount = 0
     while true do
         for index , worker in ipairs(threads) do
@@ -47,7 +47,7 @@ local function dispatch(threads , metrics , tunningConfig)
             end
         end
         if msgCount == 0 then 
-            os_exec(NO_DATA_INTERVAL_STR)
+            util.sleep(NO_DATA_INTERVAL)
         end
         msgCount = 0
     end
