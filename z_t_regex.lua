@@ -4,7 +4,7 @@ customParserConfig.init()
 local util = require 'util'
 
 local accessMsgs = {
-    '"10/Oct/2016:13:44:43 +0800" 80.40.134.103 10.44.200.160:8080 : 10.44.200.251:8080 0.003 GET 404 "http://bi-collector.oneapm.com/robots.txt" 340 564 "http://bi-collector.oneapm.com/robots.txt" "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)"' ,	
+    '"10/Oct/2016:13:44:43 +0800" 80.40.134.103 10.44.200.160:8080 : 10.44.200.251:8080 0.003 GET 404 "http://bi-collector.oneapm.com/robots.txt" 340 564 "http://bi-collector.oneapm.com/robots.txt" "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)"' ,  
     '"10/Oct/2016:13:44:43 +0800" 80.40.134.103 10.44.200.160:8080 0.003 GET 404 "https://bi-collector.oneapm.com/robots.txt" 340 564 "http://bi-collector.oneapm.com/robots.txt" "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)"' ,
     '"10/Oct/2016:13:44:43 +0800" 80.40.134.103 - 0.003 GET 404 "http://bi-collector.oneapm.com/robots.txt" 340 564 "http://bi-collector.oneapm.com/robots.txt" "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)"' ,
     '"10/Oct/2016:15:27:20 +0800" 106.39.189.45 10.44.200.251:8080 0.001 GET 200 "http://bi-collector.oneapm.com/beacon/rum/nodejs/1/RR~6uueA7VI2QbaB/?a=2279061&pl=1476084437364&v=411.4.8%20&to=AgkjEDAJHis1AhBeXDtDBDwyGhUrJwsXGHQQOG4nIwYEMToGSl9HOABu&pnet=2&phost=3g.weimob.com&ap=1&ptid=778447&f=%5B%22err%22,%22xhr%22%5D&mbi=1&perf=%7B%22timing%22:%7B%22of%22:1476084437364,%22n%22:0,%22dl%22:235,%22di%22:966,%22ds%22:966,%22de%22:976,%22dc%22:1784,%22l%22:1821,%22le%22:1836,%22f%22:46,%22dn%22:46,%22dne%22:46,%22c%22:46,%22ce%22:46,%22rq%22:46,%22rp%22:46,%22rpe%22:275%7D,%22navigation%22:%7B%7D%7D&allTime=1836&jsonp=BWEUM.setToken" 801 29 "http://3g.weimob.com/canting.html?" ""' ,
@@ -64,14 +64,16 @@ matchMsg(appMsgs ,  customParserConfig.getconfig()['applog'] , {})
 
 
 function perf()
+    local c1 , c2 , c3 ,c4 = {} , {} , {} , {}
     local st = os.time()    
     for i = 1 , 1000000 do
-        matchMsg(accessMsgs , customParserConfig.getconfig()['accesslog'] , {} , true)
-        matchMsg(accessMsgs , customParserConfig.getconfig()['errorlog'] , {} , true)
-        matchMsg(appMsgs ,  customParserConfig.getconfig()['applog'] , {} , true)
+        matchMsg(accessMsgs , customParserConfig.getconfig()['accesslog'] , c1 , true)
+        matchMsg(errorMsgs , customParserConfig.getconfig()['errorlog'] , c2 , true)
+        matchMsg(appMsgs ,  customParserConfig.getconfig()['applog'] , c3 , true)
+        matchMsg(bizMsgs ,  customParserConfig.getconfig()['bizlog'] , c4 , true)
     end
     local et = os.time()
     print(et - st)
 end
 
---perf()
+perf()
