@@ -59,9 +59,8 @@ end
 
 matchMsg(accessMsgs , customParserConfig.getconfig()['accesslog'] , {})
 matchMsg(errorMsgs ,  customParserConfig.getconfig()['errorlog'] , {})
-matchMsg(bizMsgs ,  customParserConfig.getconfig()['bizlog'] , {})
 matchMsg(appMsgs ,  customParserConfig.getconfig()['applog'] , {})
-
+matchMsg(bizMsgs ,  customParserConfig.getconfig()['bizlog'] , {})
 
 function perf()
     local c1 , c2 , c3 ,c4 = {} , {} , {} , {}
