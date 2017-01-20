@@ -6,27 +6,39 @@ local parserconfig = {}
 --创建下面两个ctr主要是为了复用，减少创建table、resizetable的开销，提高性能
 local timeformatCtrTS = {year = nil , month = nil , day = nil , hour = nil , min = nil , sec = nil}
 local timeformatCtrFD = {nil , '/' , nil , '/' , nil , ' ' , nil , ':' , nil , ':' , nil}
+local timeformatCtrTSCache = {nil , nil}
+local timeformatCtrFDCache = {nil , nil}
 
 --字段格式转化函数列表
 local convertFunctions = {
     number = tonumber ,
-    ngxtimeformatTS = function(w) 
+    ngxtimeformatTS = function(w)
+            if w == timeformatCtrTSCache[1] then
+                return timeformatCtrTSCache[2]
+            end
             timeformatCtrTS.year = string.sub(w,8,11)
             timeformatCtrTS.month = MONTHS[string.sub(w,4,6)]
             timeformatCtrTS.day = string.sub(w,1,2)
             timeformatCtrTS.hour = string.sub(w,13,14)
             timeformatCtrTS.min = string.sub(w,16,17)
             timeformatCtrTS.sec = string.sub(w,19,20)
-            return os.time(timeformatCtrTS)
+            timeformatCtrTSCache[1] = w
+            timeformatCtrTSCache[2] = os.time(timeformatCtrTS)
+            return timeformatCtrTSCache[2]
         end ,
     ngxtimeformatFD = function(w)
+            if w == timeformatCtrFDCache[1] then
+                return timeformatCtrFDCache[2]
+            end
             timeformatCtrFD[1] = string.sub(w,8,11)
             timeformatCtrFD[3] = MONTHS[string.sub(w,4,6)]
             timeformatCtrFD[5] = string.sub(w,1,2)
             timeformatCtrFD[7] = string.sub(w,13,14)
             timeformatCtrFD[9] = string.sub(w,16,17)
             timeformatCtrFD[11] = string.sub(w,19,20)
-            return table.concat(timeformatCtrFD , '')
+            timeformatCtrFDCache[1] = w
+            timeformatCtrFDCache[2] = table.concat(timeformatCtrFD , '')
+            return timeformatCtrFDCache[2]
         end ,
 }
 
