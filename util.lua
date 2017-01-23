@@ -1,6 +1,6 @@
 local util = {}
 
---local cjson = require 'cjson'
+local cjson = require 'cjson'
 local io_open , io_popen = io.open , io.popen
 local os_date = os.date
 
@@ -109,5 +109,29 @@ function util.grok(rule)
         return (index == count and '(.*)' or '(.-)')
     end)
 end
+
+function util.grokP(rule)
+    local total_len , pos = string.len(rule.regex) , 0 
+    local posSeq = {}
+
+    while  total_len - pos > 4 do
+        pos = string.find(rule.regex , '%(%.%-%)' , pos)
+        if pos then
+            pos = pos + 4
+            table.insert(posSeq , pos)
+        else
+            pos = total_len
+        end
+    end
+
+    local index = 1
+    local result = string.gsub(rule.regex , '%(%.%-%)' , function(w)
+        local sp = string.sub(rule.regex , posSeq[index] , posSeq[index])
+        sp = '([^' .. sp .. ']*)'
+        index = index + 1
+        return sp
+    end)
+    rule.regex = result
+end    
 
 return util
