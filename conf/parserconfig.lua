@@ -76,9 +76,10 @@ local config = {
     } ,
     accesslog = {
         regex = '"([%d]+/[%a]+/[%d]+:[%d]+:[%d]+:[%d]+ %+0800)" ([%d|%.]+) (.-) ([%d|%.]+) ([%a|%-]+) ([%d]+) "([http|https]+)://([^"]*)" ([%d]+) ([%d]+) "([^"]*)" "(.*)"' ,
-        --regex = '"([^"]*)" ([^%s]*) (.-) ([^%s]*) ([^%s]*) ([^%s]*) "([http|https]+)://([^%"]*)" ([^%s]*) ([^%s]*) "([^"]*)" "(.*)"' ,
+        --regex = '"([^"]*)" ([^ ]*) (.-) ([^ ]*) ([^ ]*) ([^ ]*) "([^:]*)://([^"]*)" ([^ ]*) ([^ ]*) "([^"]*)" "(.*)"' ,
         --regex = '"(.-)" (.-) (.-) (.-) (.-) (.-) "(.-)://(.-)" (.-) (.-) "(.-)" "(.*)"'  , 
-        --grok = '"$time_local" $remote_addr $upstream_addr $request_time $request_method $status "$scheme://$host$request_uri" $request_length $body_bytes_sent "$http_referer" "$http_user_agent"'
+        --grok = '"$time_local" $remote_addr $upstream_addr $request_time $request_method $status "$scheme://$host$request_uri" $request_length $body_bytes_sent "$http_referer" "$http_user_agent"' ,
+        --optimization = true , --optimization 4 grok from ungreedy to limit greedy
         mapping = {
             "nginx_time" ,
             "remote_ip" ,
@@ -118,6 +119,9 @@ function parserconfig.init()
         rule.conversionByIndex = {}
         if rule.grok then
             util.grok(rule)
+            if rule.optimization then
+                util.grokP(rule)
+            end
         end
         for index , fdn in ipairs(rule.mapping) do
             rule.conversion[fdn] = rule.conversion[fdn] and convertFunctions[rule.conversion[fdn]] or nil
