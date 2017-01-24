@@ -6,5 +6,6 @@ local groks = {
 }
 local rule = {grok = groks[1]}
 util.grok(rule)
+util.grokP(rule)
 print(rule.regex)
 print(cjson.encode(rule.mapping))
