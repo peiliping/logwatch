@@ -64,6 +64,16 @@ local config = {
             "message" ,
         } ,
     } ,
+    simplebizlog = {
+        regex = '([^ ]*)[%s]+([^ ]*)[%s]+([^ ]*)[%s]+(.*)' , 
+        --grok = '$time $logger_name $level %message'
+        mapping = {
+            "time" ,
+            "logger_name" ,
+            "level" ,
+            "message" ,
+        } ,
+    } ,
     bizlog = {
         regex = '([%d]+:[%d]+:[%d]+%.[%d]+) ([%u]+)[%s]+%[(.-)%] %[(.-)%] (.*)' , 
         mapping = {
