@@ -82,8 +82,8 @@ end
 function util.grok(rule)
     rule.mapping = {}
     local escapes = {
-        ['%.'] = '%%.' ,
         ['%%'] = '%%%' ,
+        ['%.'] = '%%.' ,
         ['%['] = '%%[' ,
         ['%]'] = '%%]' ,
         ['%('] = '%%(' ,
@@ -126,7 +126,10 @@ function util.grokP(rule)
 
     local index = 1
     local result = string.gsub(rule.regex , '%(%.%-%)' , function(w)
-        local sp = string.sub(rule.regex , posSeq[index] , posSeq[index])
+        local sp = string.sub(rule.regex , posSeq[index] , posSeq[index] + 1)
+        if sp == '%' then
+            sp = string.sub(rule.regex , posSeq[index] , posSeq[index] + 2)
+        end
         sp = '([^' .. sp .. ']*)'
         index = index + 1
         return sp
