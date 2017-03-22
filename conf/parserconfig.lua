@@ -52,28 +52,6 @@ local config = {
             "raw" ,
         } ,
     } ,
-    applog = {
-        regex = '"([%d]+%-[%d]+%-[%d]+% [%d]+:[%d]+:[%d]+%.[%d]+)" "(.-)" %[(.-)%] ([%u]+)[%s]+(.*)' , 
-        --regex = '"(.-)" "(.-)" %[(.-)%] (.-) (.*)' ,
-        --grok = '"$time" "$logger_name" [$params] $level $message' ,
-        mapping = {
-            "time" ,
-            "logger_name" ,
-            "params" ,
-            "level" ,            
-            "message" ,
-        } ,
-    } ,
-    simplebizlog = {
-        regex = '([^ ]*)[%s]+([^ ]*)[%s]+([^ ]*)[%s]+(.*)' , 
-        --grok = '$time $logger_name $level %message'
-        mapping = {
-            "time" ,
-            "logger_name" ,
-            "level" ,
-            "message" ,
-        } ,
-    } ,
     bizlog = {
         regex = '([%d]+:[%d]+:[%d]+%.[%d]+) ([%u]+)[%s]+%[(.-)%] %[(.-)%] (.*)' , 
         mapping = {
@@ -83,6 +61,14 @@ local config = {
             "logger_name" ,
             "message" ,
         } ,
+    } ,
+    bizlog2 = {
+        grok = '"$time" "$logger_name" [$params] $level $message' ,
+        optimization = true ,
+    } ,
+    bizlog3 = {
+        grok = '$time $logger_name $level $message' ,
+        optimization = true ,
     } ,
     accesslog = {
         regex = '"([%d]+/[%a]+/[%d]+:[%d]+:[%d]+:[%d]+ %+0800)" ([%d|%.]+) (.-) ([%d|%.]+) ([%a|%-]+) ([%d]+) "([http|https]+)://([^"]*)" ([%d]+) ([%d]+) "([^"]*)" "(.*)"' ,
