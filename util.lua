@@ -82,20 +82,20 @@ end
 function util.grok(rule)
     rule.mapping = {}
     local escapes = {
-        ['%%'] = '%%%' ,
-        ['%.'] = '%%.' ,
-        ['%['] = '%%[' ,
-        ['%]'] = '%]'  ,
-        ['%('] = '%%(' ,
-        ['%)'] = '%%)' ,
-        ['%+'] = '%%+' ,
-        ['%*'] = '%%*' ,
-        ['%-'] = '%%-' ,
-        ['%?'] = '%%?' ,
-        ['%^'] = '%%^' ,
+        {'%%' , '%%%'} ,
+        {'%.' , '%%.'} ,
+        {'%[' , '%%['} ,
+        {'%]' , '%%]'} ,
+        {'%(' , '%%('} ,
+        {'%)' , '%%)'} ,
+        {'%+' , '%%+'} ,
+        {'%*' , '%%*'} ,
+        {'%-' , '%%-'} ,
+        {'%?' , '%%?'} ,
+        {'%^' , '%%^'} ,
     }
-    for k , v in pairs(escapes) do
-        rule.grok = string.gsub(rule.grok , k , v)
+    for _ , v in ipairs(escapes) do
+        rule.grok = string.gsub(rule.grok , v[1] , v[2])
     end
     local t_grokstr , cts = string.gsub(rule.grok , '%$([%a|_]+)%$([%a|_]+)' , function(l , f) return '$' .. l .. '_' .. f end)
     while cts > 0 do
