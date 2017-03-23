@@ -53,14 +53,9 @@ local config = {
         } ,
     } ,
     bizlog = {
-        regex = '([%d]+:[%d]+:[%d]+%.[%d]+) ([%u]+)[%s]+%[(.-)%] %[(.-)%] (.*)' , 
-        mapping = {
-            "time" ,
-            "level" ,
-            "thread_name" ,
-            "logger_name" ,
-            "message" ,
-        } ,
+        grok = '$time $level $thread_name $logger_name $message',
+        optimization = true ,
+        easysplit = true ,
     } ,
     bizlog2 = {
         grok = '"$time" "$logger_name" [$params] $level $message' ,

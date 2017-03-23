@@ -134,6 +134,11 @@ function util.grokP(rule)
         index = index + 1
         return sp
     end)
+
+    if rule.easysplit then
+        result = string.gsub(result , '%)%s+' , ')%%s+')
+    end
+
     rule.regex = result
 end    
 
