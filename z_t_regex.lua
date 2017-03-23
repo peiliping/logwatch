@@ -28,7 +28,7 @@ local bizMsgs = {
     '00:00:10.089 ERROR [pool-14-thread-1] [com.blueocn.das.data.consumer.topics.TopicConsumer$1@65] consume message occur an error:The validated expression is false\njava.lang.IllegalArgumentException: The validated expression is false\n\tat org.apache.commons.lang3.Validate.isTrue(Validate.java:180) ~[commons-lang3-3.3.jar:3.3]\n\tat com.blueocn.das.common.util.ValidateZ.checkEachExceedZero(ValidateZ.java:58) ~[das-common-4.3.32.jar:na]\n\tat com.blueocn.das.core.repo.DeviceInfoRepo.getDeviceInfoId(DeviceInfoRepo.java:85) ~[core-dao-4.3.32.jar:na]\n\tat com.blueocn.das.core.repo.DeviceInfoRepo$$FastClassBySpringCGLIB$$be6bcb56.invoke(<generated>) ~[spring-core-4.1.6.RELEASE.jar:na]'
 }
 
-local appMsgs = {
+local biz2Msgs = {
     '"2016-12-09 14:35:32.178" "io.cloudinsight.dc.service.LicenseService" [-] ERROR LICENSE ERROR : license length must between [64, 71], but the license_key [http://cloud.oneapm.com/]\'s lenght is 24.' ,
     '"2016-12-09 14:35:32.178" "io.cloudinsight.dc.service.LicenseService" [-] ERROR LICENSE ERROR : license length must between [64, 72], but the license_key [http://cloud.oneapm.com/]\'s lenght is 24.' ,
     '"2016-12-09 14:35:32.178" "io.cloudinsight.dc.service.LicenseService" [-] ERROR LICENSE ERROR : license length must between [64, 73], but the license_key [http://cloud.oneapm.com/]\'s lenght is 24.' ,
@@ -58,21 +58,21 @@ local function matchMsg(msgs , rule , container , perf)
 end
 
 matchMsg(accessMsgs , customParserConfig.getconfig()['accesslog'] , {})
-matchMsg(errorMsgs ,  customParserConfig.getconfig()['errorlog'] , {})
-matchMsg(appMsgs ,  customParserConfig.getconfig()['applog'] , {})
-matchMsg(bizMsgs ,  customParserConfig.getconfig()['bizlog'] , {})
+matchMsg(errorMsgs  , customParserConfig.getconfig()['errorlog']  , {})
+matchMsg(bizMsgs    , customParserConfig.getconfig()['bizlog']    , {})
+matchMsg(biz2Msgs   , customParserConfig.getconfig()['bizlog2']   , {})
 
 function perf()
     local c1 , c2 , c3 ,c4 = {} , {} , {} , {}
     local st = os.time()    
     for i = 1 , 1000000 do
         matchMsg(accessMsgs , customParserConfig.getconfig()['accesslog'] , c1 , true)
-        matchMsg(errorMsgs , customParserConfig.getconfig()['errorlog'] , c2 , true)
-        matchMsg(appMsgs ,  customParserConfig.getconfig()['applog'] , c3 , true)
-        matchMsg(bizMsgs ,  customParserConfig.getconfig()['bizlog'] , c4 , true)
+        matchMsg(errorMsgs  , customParserConfig.getconfig()['errorlog']  , c2 , true)
+        matchMsg(bizMsgs    , customParserConfig.getconfig()['bizlog']    , c4 , true)
+        matchMsg(biz2Msgs   , customParserConfig.getconfig()['bizlog2']   , c3 , true)
     end
     local et = os.time()
     print(et - st)
 end
 
-perf()
+--perf()
