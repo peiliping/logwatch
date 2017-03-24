@@ -35,6 +35,12 @@ local biz2Msgs = {
     '"2016-12-09 14:35:32.178" "io.cloudinsight.dc.service.LicenseService" [-] ERROR LICENSE ERROR : license length must between [64, 74], but the license_key [http://cloud.oneapm.com/]\'s lenght is 24.' ,
 }
 
+local biz3Msgs = {
+    '09:12:23.169 com.blueocn.tps.frame.cache.CacheManager WARN  alert-rule-id-name-info title: alert-rule-id-name-info in: 0 hit: 0' ,
+    '09:12:23.169 com.blueocn.tps.frame.cache.CacheManager WARN  AgentCache  title: AgentCache in: 0 hit: 0' ,
+    '09:12:32.958 com.blueocn.tps.jdbc.driver.druid.RestfulConnection INFO  test sql :SELECT \'x\' FROM DUAL    result:[{"result":{"sample_name2":"sample_name1","sample_name1":"sample_name1","sample_divide":"sample_name1"},"timestamp":"2012-01-01T00:00:00.000Z"},{"result":{"sample_name2":"sample_name1","sample_name1":"sample_name1","sample_divide":"sample_name1"},"timestamp":"2012-01-02T00:00:00.000Z"}]' ,
+}
+
 local function matchMsg(msgs , rule , container , perf)
     if not perf then
         print(rule.regex)
@@ -61,15 +67,17 @@ matchMsg(accessMsgs , customParserConfig.getconfig()['accesslog'] , {})
 matchMsg(errorMsgs  , customParserConfig.getconfig()['errorlog']  , {})
 matchMsg(bizMsgs    , customParserConfig.getconfig()['bizlog']    , {})
 matchMsg(biz2Msgs   , customParserConfig.getconfig()['bizlog2']   , {})
+matchMsg(biz3Msgs   , customParserConfig.getconfig()['bizlog3']   , {})
 
 function perf()
-    local c1 , c2 , c3 ,c4 = {} , {} , {} , {}
+    local c1 , c2 , c3 , c4 , c5 = {} , {} , {} , {} , {}
     local st = os.time()    
     for i = 1 , 1000000 do
         matchMsg(accessMsgs , customParserConfig.getconfig()['accesslog'] , c1 , true)
         matchMsg(errorMsgs  , customParserConfig.getconfig()['errorlog']  , c2 , true)
-        matchMsg(bizMsgs    , customParserConfig.getconfig()['bizlog']    , c4 , true)
-        matchMsg(biz2Msgs   , customParserConfig.getconfig()['bizlog2']   , c3 , true)
+        matchMsg(bizMsgs    , customParserConfig.getconfig()['bizlog']    , c3 , true)
+        matchMsg(biz2Msgs   , customParserConfig.getconfig()['bizlog2']   , c4 , true)
+        matchMsg(biz3Msgs   , customParserConfig.getconfig()['bizlog3']   , c5 , true)
     end
     local et = os.time()
     print(et - st)
