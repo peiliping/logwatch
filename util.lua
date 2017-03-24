@@ -111,9 +111,13 @@ function util.grok(rule)
     local _ , count = string.gsub(t_grokstr , '%$([%a|_]+)' , '(.-)')
     local index = 0 
     rule.regex = string.gsub(t_grokstr , '%$([%a|_]+)' , function(w) 
-        table.insert(rule.mapping , w)
         index = index + 1
-        return (index == count and '(.*)' or '(.-)')
+        if w == 'ninja' then
+            return (index == count and '.*' or '.-')
+        else
+            table.insert(rule.mapping , w)
+            return (index == count and '(.*)' or '(.-)')
+        end
     end)
 end
 
