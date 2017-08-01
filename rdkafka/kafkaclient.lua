@@ -1,10 +1,9 @@
-local kafkaConfig = require 'rdkafka.config'
-local kafkaProducer = require 'rdkafka.producer'
+local kafkaConfig      = require 'rdkafka.config'
+local kafkaProducer    = require 'rdkafka.producer'
 local kafkaTopicConfig = require 'rdkafka.topic_config'
-local kafkaTopic = require 'rdkafka.topic'
-local util = require 'util.util'
+local kafkaTopic       = require 'rdkafka.topic'
 
-local string_len = string.len
+local util = require 'util.util'
 
 local kafkaclient , topics = {} , {}
 
@@ -57,7 +56,7 @@ local function sendMsg(topic , key , msg)
 end
 
 function kafkaclient.safeSendMsg(topic , key , msg , retrytimes)
-    if string_len(msg) > MSG_MAX_SIZE  then
+    if string.len(msg) > MSG_MAX_SIZE  then
         return
     end
     local status , errorinfo = pcall(sendMsg , topic , key , msg)
