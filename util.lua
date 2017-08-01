@@ -151,6 +151,18 @@ function util.grokP(rule)
     end
 
     rule.regex = result
-end    
+end
+
+function util.clone(object)
+    if type(object) ~= "table" then
+        return object
+    else
+        local new_table = {}
+        for key, value in pairs(object) do
+            new_table[key] = util.clone(value)
+        end
+        return new_table
+    end
+end
 
 return util
