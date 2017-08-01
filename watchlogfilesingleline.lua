@@ -1,11 +1,10 @@
-local util = require 'util'
-local cjson = require 'cjson'
-
-local os_time = os.time
-local string_byte = string.byte
+local util      = require 'util'
+local fileutil  = require 'fileutil'
+local tableutil = require 'tableutil'
+local cjson     = require 'cjson'
 
 local GO_ON = true
-local STOP = false
+local STOP  = false
 
 local watchlogfile = {
     task = nil ,
@@ -24,7 +23,7 @@ local watchlogfile = {
     ---- Temp Data ----
     tempPos = nil ,
     count = nil ,
-    currentNow = nil , 
+    currentNow = nil ,
     tempKafkaKey = nil ,
     readerBuffer = nil ,
     postponeBuffer = nil ,
@@ -32,33 +31,37 @@ local watchlogfile = {
 
 watchlogfile.__index = watchlogfile
 
-function watchlogfile:new(task , customParserConfig , tunningConfig)
+function watchlogfile:new(task, customParserConfig, tunningConfig, first)
     local self = {}
-    setmetatable(self , watchlogfile)
+    setmetatable(self, watchlogfile)
     self.task = task
-    self.parseRule = customParserConfig.getconfig()[task.rule]
+    self.parseRule = customParserConfig[task.rule]
     self.tunningConfig = tunningConfig
 
-    self.CHECK_FILE_EXIST_INTERVAL = tunningConfig.getconfig().CHECK_FILE_EXIST_INTERVAL
-    self.BUFFER_SIZE = tunningConfig.getconfig().BUFFER_SIZE
+    self.CHECK_FILE_EXIST_INTERVAL = tunningConfig.CHECK_FILE_EXIST_INTERVAL
+    self.BUFFER_SIZE = tunningConfig.BUFFER_SIZE
     self.KFK_MSG_KEY_SUFFIX = "_" .. task.rule
-    self.EVENT_CONTAINER = util.mergeMapTables({task.tags , {hostname = util.getHostName()}})
+    self.EVENT_CONTAINER = tableutil.clone(task.tags)
+    self.EVENT_CONTAINER.hostname = util.getHostName()
     
-    self.currentNow = os_time()
-    self.lastCheckTime = os_time()
-    self.file , self.inode = util.getFileAndInode(task , self.lastCheckTime)
-    if task.origin or (not self.file) then
-        self.pos = 0
+    self.currentNow , self.lastCheckTime = os.time() , os.time()
+    self.file , self.inode = fileutil.getFileAndInode(task)
+    if first then
+        if task.origin or (not self.file) then
+            self.pos = 0
+        else
+            self.pos = self.file:seek("end")
+        end
     else
-        self.pos = self.file:seek("end")
+        self.pos = 0
     end
     self.tempPos = 0
     return self
-end 
+end
 
 function watchlogfile:checkFileRolling()
     if (self.currentNow - self.lastCheckTime) > self.CHECK_FILE_EXIST_INTERVAL then
-        local rolling , r_file , r_inode = util.checkFileRolling(self.task , self.file , self.inode , self.currentNow)
+        local rolling , r_file , r_inode = fileutil.checkFileRolling(self.task, self.file, self.inode)
         if rolling then
             self.file , self.inode , self.pos = r_file , r_inode , 0
         end
@@ -88,36 +91,37 @@ function watchlogfile:readData2Buffer()
     return GO_ON
 end
 
-function watchlogfile:handleData(kafkaClient , topic)
+function watchlogfile:handleData(kafkaClient, topic)
     self.tempKafkaKey = self.currentNow .. self.KFK_MSG_KEY_SUFFIX
     for line in self.readerBuffer:gmatch('[^\n]+') do
         if self.postponeBuffer then 
-            self:handleEvent(kafkaClient , topic , self.postponeBuffer)
+            self:handleEvent(kafkaClient, topic, self.postponeBuffer)
         end
         self.postponeBuffer = line
         self.count = self.count + 1
     end
-    if string_byte(self.readerBuffer , -1) == 10 then
-        self:handleEvent(kafkaClient , topic , self.postponeBuffer)
+    if string.byte(self.readerBuffer, -1) == 10 then
+        self:handleEvent(kafkaClient, topic, self.postponeBuffer)
         self.postponeBuffer = nil
     end
 end
 
-function watchlogfile:handleEvent(kafkaClient , topic , msg)
-    local handled = util.parseData(msg , self.parseRule , self.EVENT_CONTAINER)
+function watchlogfile:handleEvent(kafkaClient, topic, msg)
+    local handled = util.parseData(msg, self.parseRule, self.EVENT_CONTAINER)
     if handled then
-        kafkaClient.safeSendMsg(topic , self.tempKafkaKey , cjson.encode(self.EVENT_CONTAINER) , 10)
+        print(cjson.encode(self.EVENT_CONTAINER))
+        --kafkaClient.safeSendMsg(topic, self.tempKafkaKey, cjson.encode(self.EVENT_CONTAINER), 10)
     else
         print(msg)
     end
 end
 
-function watchlogfile:readFile(kafkaClient , topic)
-    self.currentNow = os_time()
+function watchlogfile:readFile(kafkaClient, topic)
+    self.currentNow = os.time()
     if self:readData2Buffer() then 
-        self:handleData(kafkaClient , topic)
+        self:handleData(kafkaClient, topic)
     else
-        self:checkFileRolling()    
+        self:checkFileRolling()
     end
     return self.count
 end

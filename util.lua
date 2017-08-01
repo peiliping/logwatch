@@ -21,38 +21,6 @@ function util.getHostName()
     return result
 end
 
-function util.getFileAndInode(task , timestamp)
-    local path = task.path
-    if task.logNameSuffix then
-        path = task.path .. os_date(task.logNameSuffix , timestamp)    
-    end
-    local file = io_open(path , "r")
-    local inode = nil
-    if file then
-        local tmp = io_popen("ls -i " .. path)
-        inode = tmp:lines()()
-        tmp:close()
-    end
-    return file , inode
-end
-
-function util.checkFileRolling(task , file , inode , timestamp)
-    local rolling = false
-    if file == nil then
-        file , inode = util.getFileAndInode(task , timestamp)
-        rolling = true
-    else
-        local t_file , t_inode = util.getFileAndInode(task , timestamp)
-        if inode == t_inode then
-            t_file:close()
-        else
-            file:close()
-            file , inode , rolling = t_file , t_inode , true
-        end
-    end
-    return rolling , file , inode
-end
-
 function util.mergeMapTables(tbs)
     local container = {}
     for _ , tb in ipairs(tbs) do
@@ -151,18 +119,6 @@ function util.grokP(rule)
     end
 
     rule.regex = result
-end
-
-function util.clone(object)
-    if type(object) ~= "table" then
-        return object
-    else
-        local new_table = {}
-        for key, value in pairs(object) do
-            new_table[key] = util.clone(value)
-        end
-        return new_table
-    end
 end
 
 return util
