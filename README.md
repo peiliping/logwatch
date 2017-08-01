@@ -48,7 +48,7 @@ Logwatch
 
     程序启动入口，负责初始化任务和调度执行
 
-2. watchlog*.lua
+2. watchlog/*.lua
 
     多种类型文件处理的具体实现，其中watchlogfilesingleline.lua为基类，多行日志解析也是在其基础上完成
 
@@ -56,7 +56,7 @@ Logwatch
 
     封装的kafkaclient，包括初始化和容错等
 
-4. util.lua
+4. util/*.lua
 
     简单的函数工具类
 
@@ -64,7 +64,7 @@ Logwatch
 
     存放logwatch的配置
 
-6. z_t_*.lua
+6. test/*.lua
 
     测试用的代码
 
