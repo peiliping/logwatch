@@ -21,12 +21,6 @@ function util.getHostName()
     return result
 end
 
-function util.mergeMapTables2Left(left , right)
-    for key , value in pairs(right) do
-        left[key] = value
-    end
-end
-
 function util.parseData(msg , rule , container)
     local handled , parseResult = false , {msg:match(rule.regex)}
     for index , value in ipairs(parseResult) do

@@ -75,6 +75,7 @@ while true do
         if status then
             if result < 0 then
                 container[name] , metrics[name] = nil , nil
+                print("delete task for " .. name)
             end
             msgCount = msgCount + result
             metrics[name] = metrics[name] + result

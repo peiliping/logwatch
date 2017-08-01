@@ -1,6 +1,4 @@
 local singlelineW = require 'watchlogfilesingleline'
-local string_byte = string.byte
-local table_concat , table_insert = table.concat , table.insert
 
 local watchlogfilemultiline = {
     ---- CONSTANTS ----
@@ -15,9 +13,9 @@ local watchlogfilemultiline = {
 setmetatable(watchlogfilemultiline , singlelineW)
 watchlogfilemultiline.__index = watchlogfilemultiline
 
-function watchlogfilemultiline:new(task , customParserConfig , tunningConfig)
+function watchlogfilemultiline:new(task, customParserConfig, tunningConfig, first)
     local self = {}
-    self = singlelineW:new(task , customParserConfig , tunningConfig)
+    self = singlelineW:new(task, customParserConfig, tunningConfig, first)
     setmetatable(self ,  watchlogfilemultiline)
     self.MULTILINE_IDENTIFY = task.multilineIdentify
     self.MULTILINE_MAX_NUM = tunningConfig.getconfig().MULTILINE_MAX_NUM
@@ -25,25 +23,25 @@ function watchlogfilemultiline:new(task , customParserConfig , tunningConfig)
   return self
 end
 
-function watchlogfilemultiline:handleMultiLine(kafkaClient , topic)
+function watchlogfilemultiline:handleMultiLine(kafkaClient, topic)
     if self.postponeBuffer:match(self.MULTILINE_IDENTIFY) then
         if self.multiLineData then 
             self:handleEventPlus(kafkaClient , topic , self.multiLineData)
         end
         self.multiLineData = {}
-        table_insert(self.multiLineData , self.postponeBuffer)
+        table.insert(self.multiLineData , self.postponeBuffer)
         self.multiLineNum = 1
     else
         if self.multiLineData then
             if self.multiLineNum < self.MULTILINE_MAX_NUM then
-                table_insert(self.multiLineData , self.postponeBuffer)
+                table.insert(self.multiLineData , self.postponeBuffer)
             end
             self.multiLineNum = self.multiLineNum +1
         end
     end
 end
 
-function watchlogfilemultiline:handleData(kafkaClient , topic)
+function watchlogfilemultiline:handleData(kafkaClient, topic)
     self.tempKafkaKey = self.currentNow .. self.KFK_MSG_KEY_SUFFIX
     for line in self.readerBuffer:gmatch('[^\n]+') do
         if self.postponeBuffer then
@@ -52,7 +50,7 @@ function watchlogfilemultiline:handleData(kafkaClient , topic)
         self.postponeBuffer = line
         self.count = self.count + 1
     end
-    if string_byte(self.readerBuffer , -1) == 10 then
+    if string.byte(self.readerBuffer , -1) == 10 then
         if self.postponeBuffer then
             self:handleMultiLine(kafkaClient , topic)
             self.postponeBuffer = nil
@@ -60,11 +58,11 @@ function watchlogfilemultiline:handleData(kafkaClient , topic)
     end
 end
 
-function watchlogfilemultiline:handleEventPlus(kafkaClient , topic , msgTable)
+function watchlogfilemultiline:handleEventPlus(kafkaClient, topic, msgTable)
     if self.multiLineNum == 1 then
         self:handleEvent(kafkaClient , topic , msgTable[1])
     else
-        self:handleEvent(kafkaClient , topic , table_concat(msgTable , '\n'))
+        self:handleEvent(kafkaClient , topic , table.concat(msgTable , '\n'))
     end
 end
 

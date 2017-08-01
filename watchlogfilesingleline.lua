@@ -20,6 +20,7 @@ local watchlogfile = {
     inode = nil ,
     pos = nil ,
     lastCheckTime = nil ,
+    lastFileExist = nil ,
     ---- Temp Data ----
     tempPos = nil ,
     count = nil ,
@@ -44,7 +45,7 @@ function watchlogfile:new(task, customParserConfig, tunningConfig, first)
     self.EVENT_CONTAINER = tableutil.clone(task.tags)
     self.EVENT_CONTAINER.hostname = util.getHostName()
     
-    self.currentNow , self.lastCheckTime = os.time() , os.time()
+    self.currentNow , self.lastCheckTime , self.lastFileExist = os.time() , os.time() , os.time()
     self.file , self.inode = fileutil.getFileAndInode(task)
     if first then
         if task.origin or (not self.file) then
@@ -92,6 +93,7 @@ function watchlogfile:readData2Buffer()
 end
 
 function watchlogfile:handleData(kafkaClient, topic)
+    self.lastFileExist = self.currentNow
     self.tempKafkaKey = self.currentNow .. self.KFK_MSG_KEY_SUFFIX
     for line in self.readerBuffer:gmatch('[^\n]+') do
         if self.postponeBuffer then 
@@ -118,7 +120,7 @@ end
 
 function watchlogfile:readFile(kafkaClient, topic)
     self.currentNow = os.time()
-    if self:readData2Buffer() then 
+    if self:readData2Buffer() then
         self:handleData(kafkaClient, topic)
     else
         self:checkFileRolling()

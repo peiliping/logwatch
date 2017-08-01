@@ -12,4 +12,10 @@ function tableutil.clone(object)
     end
 end
 
+function tableutil.simpleCopy(source, target)
+	for key , value in pairs(source) do
+        target[key] = value
+    end
+end
+
 return tableutil
