@@ -53,9 +53,11 @@ local function checkTask(first)
     	elseif task.filenameFilter then
     		local filenames = fileutil.filter(task.dirpath , task.filenameFilter)
     		for _ , filename in ipairs(filenames) do
-    			local newtask = tableutil.clone(task)
-    			newtask.filename = filename
-                container[filename] , metrics[filename] = createTask(first, newtask) , 0
+                if container[task.dirpath .. filename] == nil then
+    			    local newtask = tableutil.clone(task)
+    			    newtask.filename = filename
+                    container[task.dirpath .. filename] , metrics[task.dirpath .. filename] = createTask(first, newtask) , 0
+                end
     		end
     	else
     		error("filename define missing")
@@ -76,9 +78,10 @@ while true do
             if result < 0 then
                 container[name] , metrics[name] = nil , nil
                 print("delete task for " .. name)
+            else
+                msgCount = msgCount + result
+                metrics[name] = metrics[name] + result
             end
-            msgCount = msgCount + result
-            metrics[name] = metrics[name] + result
         else
             print(result)
         end

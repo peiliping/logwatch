@@ -44,6 +44,7 @@ function watchlogfile:new(task, customParserConfig, tunningConfig, first)
     self.KFK_MSG_KEY_SUFFIX = "_" .. task.rule
     self.EVENT_CONTAINER = tableutil.clone(task.tags)
     self.EVENT_CONTAINER.hostname = util.getHostName()
+    self.EVENT_CONTAINER.filename = task.dirpath .. task.filename
     
     self.currentNow , self.lastCheckTime , self.lastFileExist = os.time() , os.time() , os.time()
     self.file , self.inode = fileutil.getFileAndInode(task)
@@ -68,6 +69,9 @@ function watchlogfile:checkFileRolling()
         end
         self.lastCheckTime = self.currentNow
     end
+    if self.file == nil and self.currentNow - self.lastFileExist > self.CHECK_FILE_EXIST_INTERVAL * 5 then
+        self.count = -1
+    end
 end
 
 function watchlogfile:readData2Buffer()
@@ -88,7 +92,7 @@ function watchlogfile:readData2Buffer()
     if self.postponeBuffer then
         self.readerBuffer = self.postponeBuffer .. self.readerBuffer
         self.postponeBuffer = nil
-    end    
+    end
     return GO_ON
 end
 
@@ -100,7 +104,6 @@ function watchlogfile:handleData(kafkaClient, topic)
             self:handleEvent(kafkaClient, topic, self.postponeBuffer)
         end
         self.postponeBuffer = line
-        self.count = self.count + 1
     end
     if string.byte(self.readerBuffer, -1) == 10 then
         self:handleEvent(kafkaClient, topic, self.postponeBuffer)
@@ -110,6 +113,7 @@ end
 
 function watchlogfile:handleEvent(kafkaClient, topic, msg)
     local handled = util.parseData(msg, self.parseRule, self.EVENT_CONTAINER)
+    self.count = self.count + 1
     if handled then
         print(cjson.encode(self.EVENT_CONTAINER))
         --kafkaClient.safeSendMsg(topic, self.tempKafkaKey, cjson.encode(self.EVENT_CONTAINER), 10)

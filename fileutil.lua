@@ -15,7 +15,7 @@ function fileutil.filter(path, regex)
         	if filename ~= "." and filename ~= ".." then
 				local s , e = string.find(filename, regex)
 				if(s == 1 and e == string.len(filename)) then
-					table.insert(result, path .. filename)
+					table.insert(result, filename)
 				end
         	end
     	end

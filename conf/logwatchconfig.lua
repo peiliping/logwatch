@@ -2,8 +2,8 @@ local logwatchconfig = {}
 local config = {
     {
         dirpath = "/home/peiliping/dev/logs/" ,                                   --(Required) 需要监控的日志文件目录
-        filename = "test.log" ,                                                   --(Optional) 需要监控的日志文件名
-      --filenameFilter = '(.*).log%-(%d+)%-(%d+)%-(%d+)' ,                        --(Optional) 需要监控的日志文件名正则表达式
+      --filename = "test.log" ,                                                   --(Optional) 需要监控的日志文件名
+        filenameFilter = '(.*).log%-(%d+)%-(%d+)%-(%d+)' ,                        --(Optional) 需要监控的日志文件名正则表达式
         origin = true ,                                                           --(Optional) 是否从文件起始开始读取，否则就是从logwatch程序启动时刻开始读取文件增量
         rule = "accesslog" ,                                                      --(Required) 日志解析规则，对应parseconfig中的内容
       --multiline = true ,                                                        --(Optional) 文件中是否含有多行结构的日志
