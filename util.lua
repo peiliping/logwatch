@@ -21,16 +21,6 @@ function util.getHostName()
     return result
 end
 
-function util.mergeMapTables(tbs)
-    local container = {}
-    for _ , tb in ipairs(tbs) do
-        for key , value in pairs(tb) do
-            container[key] = value
-        end
-    end
-    return container
-end
-
 function util.mergeMapTables2Left(left , right)
     for key , value in pairs(right) do
         left[key] = value

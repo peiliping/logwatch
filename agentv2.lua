@@ -29,7 +29,7 @@ local function createTask(first, task)
         local wtcLogFile = watchlogFac:new(task , customParserConfig , tunningConfig)
         local c = 0 
         while true do
-            c = wtcLogFile:readFile()
+            c = wtcLogFile:readFile(nil , nil)
             if c < 0 then break end
             coroutine.yield(c)
         end
