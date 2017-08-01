@@ -8,10 +8,10 @@ local util      = require 'util.util'
 local fileutil  = require 'util.fileutil'
 local tableutil = require 'util.tableutil'
 
-local singlelineW = require 'watchlogfilesingleline'
-local multilineW  = require 'watchlogfilemultiline'
-local javalogW    = require 'watchlogfilejavalog'
-local jsonlogW    = require 'watchlogfilesinglelinejson'
+local singlelineW = require 'watchlog.watchlogfilesingleline'
+local multilineW  = require 'watchlog.watchlogfilemultiline'
+local javalogW    = require 'watchlog.watchlogfilejavalog'
+local jsonlogW    = require 'watchlog.watchlogfilesinglelinejson'
 
 local container , metrics = {} , {}
 

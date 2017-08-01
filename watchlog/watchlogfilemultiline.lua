@@ -1,4 +1,4 @@
-local singlelineW = require 'watchlogfilesingleline'
+local singlelineW = require 'watchlog.watchlogfilesingleline'
 
 local watchlogfilemultiline = {
     ---- CONSTANTS ----

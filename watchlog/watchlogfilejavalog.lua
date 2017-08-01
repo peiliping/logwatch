@@ -1,4 +1,4 @@
-local multilineW = require 'watchlogfilemultiline'
+local multilineW = require 'watchlog.watchlogfilemultiline'
 local util = require 'util.util'
 local tableutil = require 'util.tableutil'
 local cjson = require 'cjson'
