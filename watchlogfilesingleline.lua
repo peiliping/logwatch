@@ -1,6 +1,6 @@
-local util      = require 'util'
-local fileutil  = require 'fileutil'
-local tableutil = require 'tableutil'
+local util      = require 'util.util'
+local fileutil  = require 'util.fileutil'
+local tableutil = require 'util.tableutil'
 local cjson     = require 'cjson'
 
 local GO_ON = true

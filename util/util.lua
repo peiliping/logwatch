@@ -1,9 +1,6 @@
 local util = {}
 
 local cjson = require 'cjson'
-local io_open , io_popen = io.open , io.popen
-local os_date = os.date
-
 local ffi = require 'ffi'
 
 ffi.cdef[[
@@ -15,7 +12,7 @@ function util.sleep(sec)
 end
 
 function util.getHostName()
-    local v = io_popen("hostname")
+    local v = io.popen("hostname")
     local result = v:lines()()
     v:close()
     return result

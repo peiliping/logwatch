@@ -4,9 +4,9 @@ local parserConfig         = (require 'conf.parserconfig'  ).init()
 local customParserConfig   = (require 'conf.parserconfig'  ).getconfig()
 local customKafkaConfig    = (require 'conf.kafkaconfig'   ).getconfig()
 
-local util      = require 'util'
-local fileutil  = require 'fileutil'
-local tableutil = require 'tableutil'
+local util      = require 'util.util'
+local fileutil  = require 'util.fileutil'
+local tableutil = require 'util.tableutil'
 
 local singlelineW = require 'watchlogfilesingleline'
 local multilineW  = require 'watchlogfilemultiline'
@@ -19,6 +19,7 @@ local lastCheckTaskTime , now = os.time() , os.time()
 local msgCount = 0
 
 local function createTask(first, task)
+    print("creat task " .. task.dirpath .. task.filename)
     return coroutine.create(function()
         local watchlogFac = nil
         if task.multiline then

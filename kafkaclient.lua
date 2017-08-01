@@ -2,7 +2,7 @@ local kafkaConfig = require 'rdkafka.config'
 local kafkaProducer = require 'rdkafka.producer'
 local kafkaTopicConfig = require 'rdkafka.topic_config'
 local kafkaTopic = require 'rdkafka.topic'
-local util = require 'util'
+local util = require 'util.util'
 
 local string_len = string.len
 

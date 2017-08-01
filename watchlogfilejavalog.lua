@@ -1,6 +1,6 @@
 local multilineW = require 'watchlogfilemultiline'
-local util = require 'util'
-local tableutil = require 'tableutil'
+local util = require 'util.util'
+local tableutil = require 'util.tableutil'
 local cjson = require 'cjson'
 
 local watchlogfilejavalog = {

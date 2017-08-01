@@ -1,5 +1,5 @@
 local singlelineW = require 'watchlogfilesingleline'
-local tableutil = require 'tableutil'
+local tableutil = require 'util.tableutil'
 local cjson = require 'cjson'
 
 local watchlogfilesinglelinejson = {
