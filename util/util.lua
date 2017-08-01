@@ -1,7 +1,7 @@
 local util = {}
 
 local cjson = require 'cjson'
-local ffi = require 'ffi'
+local ffi   = require 'ffi'
 
 ffi.cdef[[
     unsigned int sleep(unsigned int seconds);
@@ -16,16 +16,6 @@ function util.getHostName()
     local result = v:lines()()
     v:close()
     return result
-end
-
-function util.parseData(msg , rule , container)
-    local handled , parseResult = false , {msg:match(rule.regex)}
-    for index , value in ipairs(parseResult) do
-        local cf = rule.conversion[index]
-        container[rule.mapping[index]] = (cf and cf(value) or value)
-        handled = true
-    end
-    return handled
 end
 
 local escapes = {

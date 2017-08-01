@@ -111,8 +111,18 @@ function watchlogfile:handleData(kafkaClient, topic)
     end
 end
 
+function watchlogfile:parseData(msg)
+    local handled , parseResult = false , {msg:match(self.parseRule.regex)}
+    for index , value in ipairs(parseResult) do
+        local cf = self.parseRule.conversion[index]
+        self.EVENT_CONTAINER[self.parseRule.mapping[index]] = (cf and cf(value) or value)
+        handled = true
+    end
+    return handled
+end
+
 function watchlogfile:handleEvent(kafkaClient, topic, msg)
-    local handled = util.parseData(msg, self.parseRule, self.EVENT_CONTAINER)
+    local handled = self:parseData(msg)
     self.count = self.count + 1
     if handled then
         print(cjson.encode(self.EVENT_CONTAINER))

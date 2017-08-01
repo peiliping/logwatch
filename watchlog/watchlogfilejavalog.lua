@@ -23,7 +23,7 @@ function watchlogfilejavalog:handleEventPlus(kafkaClient , topic , msgTable)
     if self.multiLineNum == 1 then
         self:handleEvent(kafkaClient , topic , msgTable[1])
     else
-        local handled = util.parseData(msgTable[1] , self.parseRule , self.EVENT_CONTAINER)
+        local handled = self:parseData(msgTable[1])
         local tmp_content = {}
         if handled then
             local exceptionName , exceptionMsg = msgTable[2]:match('%s?([^%s]-tion):(.*)') --('(.-Exception):(.*)')
