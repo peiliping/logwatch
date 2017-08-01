@@ -1,22 +1,20 @@
+local util        = require 'util.util'
+local fileutil    = require 'util.fileutil'
+local tableutil   = require 'util.tableutil'
+
 local customLogWatchConfig = (require 'conf.logwatchconfig').getconfig()
 local tunningConfig        = (require 'conf.tunningconfig' ).getconfig()
 local parserConfig         = (require 'conf.parserconfig'  ).init()
 local customParserConfig   = (require 'conf.parserconfig'  ).getconfig()
 local customKafkaConfig    = (require 'conf.kafkaconfig'   ).getconfig()
 
-local util      = require 'util.util'
-local fileutil  = require 'util.fileutil'
-local tableutil = require 'util.tableutil'
-
 local singlelineW = require 'watchlog.watchlogfilesingleline'
 local multilineW  = require 'watchlog.watchlogfilemultiline'
 local javalogW    = require 'watchlog.watchlogfilejavalog'
 local jsonlogW    = require 'watchlog.watchlogfilesinglelinejson'
 
-local container , metrics = {} , {}
-
+local container , metrics , msgCount = {} , {} , 0
 local lastCheckTaskTime , now = os.time() , os.time()
-local msgCount = 0
 
 local function createTask(first, task)
     print("creat task " .. task.dirpath .. task.filename)
@@ -41,9 +39,7 @@ end
 
 local function checkTask(first)
 	for _ , task in ipairs(customLogWatchConfig) do
-		if task.dirpath == nil then
-			error("dirpath define missing")
-		end
+		if task.dirpath == nil then error("dirpath define missing") end
     	if task.filename then
     		local p = task.dirpath .. task.filename
     		if container[p] == nil then
@@ -87,8 +83,6 @@ while true do
             print(result)
         end
     end
-    if msgCount == 0 then 
-        util.sleep(tunningConfig.NO_DATA_INTERVAL)
-    end
+    if msgCount == 0 then util.sleep(tunningConfig.NO_DATA_INTERVAL) end
     msgCount = 0
 end

@@ -133,9 +133,7 @@ function watchlogfile:readFile(kafkaClient, topic)
 end
 
 function watchlogfile:close()
-    if self.file then
-        self.file:close()
-    end
+    if self.file then self.file:close() end
 end
 
 return watchlogfile
