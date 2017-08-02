@@ -13,7 +13,7 @@ Logwatch
 
 3. 技术
 
-    Logwatch采用Lua语言编写，主要依赖有：[cjson](https://github.com/mpx/lua-cjson/)、[luardkafka](https://github.com/mistsv/luardkafka)、[librdkafka](https://github.com/edenhill/librdkafka)、[luajit](http://luajit.org/download.html)
+    Logwatch采用Lua语言编写，主要依赖有：[cjson](https://github.com/mpx/lua-cjson/)、[luardkafka](https://github.com/mistsv/luardkafka)、[librdkafka](https://github.com/edenhill/librdkafka)、[luajit](http://luajit.org/download.html)、[lfs](https://github.com/keplerproject/luafilesystem)
 
 4. 优势
 
@@ -41,6 +41,9 @@ Logwatch
 
     luardkafka的代码在rdkafka目录下，不需要单独安装，其中produce的接口做了少量改动，处理一些异常情况
 
+5. 安装lfs
+
+    主要是丰富lua对文件和目录读取的api
 
 ### 代码结构
 

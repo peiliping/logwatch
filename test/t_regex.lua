@@ -1,7 +1,6 @@
 local cjson = require 'cjson'
 local customParserConfig = require 'conf.parserconfig'
 customParserConfig.init()
-local util = require 'util.util'
 
 local accessMsgs = {
     '"10/Oct/2016:13:44:43 +0800" 80.40.134.103 10.44.200.160:8080 : 10.44.200.251:8080 0.003 GET 404 "http://bi-collector.oneapm.com/robots.txt" 340 564 "http://bi-collector.oneapm.com/robots.txt" "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)"' ,  
@@ -41,6 +40,16 @@ local biz3Msgs = {
     '09:12:32.958 com.blueocn.tps.jdbc.driver.druid.RestfulConnection INFO  test sql :SELECT \'x\' FROM DUAL    result:[{"result":{"sample_name2":"sample_name1","sample_name1":"sample_name1","sample_divide":"sample_name1"},"timestamp":"2012-01-01T00:00:00.000Z"},{"result":{"sample_name2":"sample_name1","sample_name1":"sample_name1","sample_divide":"sample_name1"},"timestamp":"2012-01-02T00:00:00.000Z"}]' ,
 }
 
+local function parseData(msg , rule , container)
+    local handled , parseResult = false , {msg:match(rule.regex)}
+    for index , value in ipairs(parseResult) do
+        local cf = rule.conversion[index]
+        container[rule.mapping[index]] = (cf and cf(value) or value)
+        handled = true
+    end
+    return handled
+end
+
 local function matchMsg(msgs , rule , container , perf)
     if not perf then
         print(rule.regex)
@@ -48,7 +57,7 @@ local function matchMsg(msgs , rule , container , perf)
         print('---------------------------')
     end
     for idx , msg in ipairs(msgs) do
-        local handled = util.parseData(msg , rule , container)
+        local handled = parseData(msg , rule , container)
         local event = cjson.encode(container)
         if handled then
             if perf then
