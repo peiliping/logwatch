@@ -18,7 +18,7 @@ function watchlogfilemultiline:new(task, customParserConfig, tunningConfig, firs
     self = singlelineW:new(task, customParserConfig, tunningConfig, first)
     setmetatable(self ,  watchlogfilemultiline)
     self.MULTILINE_IDENTIFY = task.multilineIdentify
-    self.MULTILINE_MAX_NUM = tunningConfig.getconfig().MULTILINE_MAX_NUM
+    self.MULTILINE_MAX_NUM = tunningConfig.MULTILINE_MAX_NUM
     self.multiLineNum = 0
   return self
 end
