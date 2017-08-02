@@ -25,7 +25,7 @@ Logwatch
 
 ### 安装
 
-1. 编译安装Luajit（LuaJIT-2.1.0-beta2）
+1. 编译安装Luajit（LuaJIT-2.1.0-beta3）
 
     安装后需要为/usr/local/bin/luajit-2.1.0-beta3创建一个link（/usr/local/bin/luajit），保证luajit命令可用
 
@@ -33,7 +33,7 @@ Logwatch
 
     安装后需要为创建一个link -s /usr/local/lib/librdkafka.so.1 /usr/lib/librdkafka.so.1
 
-3. 编译安装cjson
+3. 编译安装cjson(2.1.0)
 
     将编译好的cjson.so放在luajit能够找到的lib路径下即可
 
@@ -41,7 +41,7 @@ Logwatch
 
     luardkafka的代码在rdkafka目录下，不需要单独安装，其中produce的接口做了少量改动，处理一些异常情况
 
-5. 安装lfs
+5. 安装lfs(1.6.3)
 
     主要是丰富lua对文件和目录读取的api
 
