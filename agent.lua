@@ -1,6 +1,7 @@
 local util        = require 'util.util'
 local fileutil    = require 'util.fileutil'
 local tableutil   = require 'util.tableutil'
+local kafkaClient = require 'rdkafka.kafkaclient'
 
 local customLogWatchConfig = (require 'conf.logwatchconfig').getconfig()
 local tunningConfig        = (require 'conf.tunningconfig' ).getconfig()
@@ -16,9 +17,12 @@ local jsonlogW    = require 'watchlog.watchlogfilesinglelinejson'
 local container , metrics , msgCount = {} , {} , 0
 local lastCheckTaskTime , now = os.time() , os.time()
 
+kafkaClient.initKafkaClient(customKafkaConfig , metrics)
+
 local function createTask(first, task)
     print("creat task " .. task.dirpath .. task.filename)
     return coroutine.create(function()
+        local topic = kafkaClient.getTopicInst(task.topic)
         local watchlogFac = nil
         if task.multiline then
             watchlogFac = (task.javaLog and javalogW or multilineW)
@@ -28,7 +32,7 @@ local function createTask(first, task)
         local wtcLogFile = watchlogFac:new(task , customParserConfig , tunningConfig)
         local c = 0 
         while true do
-            c = wtcLogFile:readFile(nil , nil)
+            c = wtcLogFile:readFile(kafkaClient , topic)
             if c < 0 then break end
             coroutine.yield(c)
         end

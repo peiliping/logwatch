@@ -28,8 +28,8 @@ function kafkaclient.initKafkaClient(_KafkaConfig , metrics)
     globalConfig:set_delivery_cb(function(payload , err) end)
     globalConfig:set_stat_cb(function(payload) 
         local ts = os.time()
-        for _ , metric in ipairs(metrics) do
-            print(ts , metric[1] , metric[2])
+        for name , metric in pairs(metrics) do
+            print(ts , name , metric)
         end
         print(payload)
     end)

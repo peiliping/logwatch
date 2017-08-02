@@ -125,8 +125,7 @@ function watchlogfile:handleEvent(kafkaClient, topic, msg)
     local handled = self:parseData(msg)
     self.count = self.count + 1
     if handled then
-        print(cjson.encode(self.EVENT_CONTAINER))
-        --kafkaClient.safeSendMsg(topic, self.tempKafkaKey, cjson.encode(self.EVENT_CONTAINER), 10)
+        kafkaClient.safeSendMsg(topic, self.tempKafkaKey, cjson.encode(self.EVENT_CONTAINER), 10)
     else
         print(msg)
     end

@@ -37,8 +37,7 @@ function watchlogfilejavalog:handleEventPlus(kafkaClient , topic , msgTable)
                 tmp_content['messageDetail'] = table.concat(msgTable , '\n' , 2)
             end
             tableutil.simpleCopy(tmp_content , self.EVENT_CONTAINER)
-            print(cjson.encode(tmp_content))
-            --kafkaClient.safeSendMsg(topic , self.tempKafkaKey  , cjson.encode(tmp_content) , 10)
+            kafkaClient.safeSendMsg(topic , self.tempKafkaKey  , cjson.encode(tmp_content) , 10)
         else
             print(table.concat(msgTable , '\n'))
         end
