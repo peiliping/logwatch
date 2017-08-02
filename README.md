@@ -21,17 +21,17 @@ Logwatch
 
     测试结果证明，NginxAccessLog每秒可以处理5万行，Java应用Log每秒可以处理20万
 
-    通过协程来进行多任务的调度，最多占用1个Cpu Core，其中Lua正则表达式中的非贪婪匹配(.-)，对性能的提升有很大帮助
+    通过协程来进行多任务的调度，最多占用1个Cpu Core
 
 ### 安装
 
 1. 编译安装Luajit（LuaJIT-2.1.0-beta2）
 
-    安装后需要为/usr/local/bin/luajit-2.1.0-beta2创建一个link（/usr/local/bin/luajit），保证luajit命令可用
+    安装后需要为/usr/local/bin/luajit-2.1.0-beta3创建一个link（/usr/local/bin/luajit），保证luajit命令可用
 
-2. 编译安装librdkafka（0.9.2）
+2. 编译安装librdkafka（0.9.5）
 
-    安装后需要为创建一个link /usr/lib64/librdkafka.so.1 -> /安装目录/librdkafka-0.9.2/lib/librdkafka.so.1
+    安装后需要为创建一个link -s /usr/local/lib/librdkafka.so.1 /usr/lib/librdkafka.so.1
 
 3. 编译安装cjson
 
@@ -48,15 +48,15 @@ Logwatch
 
     程序启动入口，负责初始化任务和调度执行
 
-2. watchlog*.lua
+2. watchlog/*.lua
 
     多种类型文件处理的具体实现，其中watchlogfilesingleline.lua为基类，多行日志解析也是在其基础上完成
 
-3. kafkaclient.lua
+3. rdkafka/kafkaclient.lua
 
     封装的kafkaclient，包括初始化和容错等
 
-4. util.lua
+4. util/*.lua
 
     简单的函数工具类
 
@@ -64,7 +64,7 @@ Logwatch
 
     存放logwatch的配置
 
-6. z_t_*.lua
+6. test/*.lua
 
     测试用的代码
 

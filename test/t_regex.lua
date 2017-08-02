@@ -1,7 +1,7 @@
 local cjson = require 'cjson'
 local customParserConfig = require 'conf.parserconfig'
 customParserConfig.init()
-local util = require 'util'
+local util = require 'util.util'
 
 local accessMsgs = {
     '"10/Oct/2016:13:44:43 +0800" 80.40.134.103 10.44.200.160:8080 : 10.44.200.251:8080 0.003 GET 404 "http://bi-collector.oneapm.com/robots.txt" 340 564 "http://bi-collector.oneapm.com/robots.txt" "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)"' ,  
