@@ -19,7 +19,7 @@ Logwatch
 
     资源占用少(1 cpu core , 128m memory)，性能优异
 
-    测试结果证明，NginxAccessLog每秒可以处理5万行，Java应用Log每秒可以处理20万
+    测试结果证明，NginxAccessLog每秒可以处理7万行，Java应用Log每秒可以处理20万
 
     通过协程来进行多任务的调度，最多占用1个Cpu Core
 
