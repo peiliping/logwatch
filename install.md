@@ -1,5 +1,11 @@
 install luajit
+
 install luarocks
+
+install cmake
+
 install lfs
-install cjson
+
 install librdkafka
+
+install rapidjson

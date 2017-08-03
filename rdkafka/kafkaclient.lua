@@ -4,7 +4,7 @@ local kafkaTopicConfig = require 'rdkafka.topic_config'
 local kafkaTopic       = require 'rdkafka.topic'
 
 local util  = require 'util.util'
-local cjson = require 'cjson'
+local json = require 'rapidjson'
 
 local kafkaclient , topics = {} , {}
 
@@ -29,7 +29,7 @@ function kafkaclient.initKafkaClient(_KafkaConfig , metrics)
     globalConfig:set_delivery_cb(function(payload , err) end)
     globalConfig:set_stat_cb(function(payload) 
         local ts = os.time()
-        print(ts , cjson.encode(metrics))
+        print(ts , json.encode(metrics))
         print(payload)
     end)
     producer = kafkaProducer.create(globalConfig)

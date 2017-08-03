@@ -13,7 +13,7 @@ Logwatch
 
 3. 技术
 
-    Logwatch采用Lua语言编写，主要依赖有：[cjson](https://github.com/mpx/lua-cjson/)、[luardkafka](https://github.com/mistsv/luardkafka)、[librdkafka](https://github.com/edenhill/librdkafka)、[luajit](http://luajit.org/download.html)、[lfs](https://github.com/keplerproject/luafilesystem)
+    Logwatch采用Lua语言编写，主要依赖有：[rapidjson](https://github.com/miloyip/rapidjson)、[luardkafka](https://github.com/mistsv/luardkafka)、[librdkafka](https://github.com/edenhill/librdkafka)、[luajit](http://luajit.org/download.html)、[lfs](https://github.com/keplerproject/luafilesystem)
 
 4. 优势
 
@@ -33,9 +33,9 @@ Logwatch
 
     安装后需要为创建一个link -s /usr/local/lib/librdkafka.so.1 /usr/lib/librdkafka.so.1
 
-3. 编译安装cjson(2.1.0)
+3. 编译安装rapidjson(0.5.1)
 
-    将编译好的cjson.so放在luajit能够找到的lib路径下即可
+    将编译好的rapidjson.so放在luajit能够找到的lib路径下即可
 
 4. 安装luardkafka
 

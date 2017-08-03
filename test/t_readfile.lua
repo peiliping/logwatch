@@ -7,7 +7,6 @@ local singlelineW = require 'watchlog.watchlogfilesingleline'
 local multilineW  = require 'watchlog.watchlogfilemultiline'
 
 local debug = false
-
 local ts = os.time()
 for _ , task in ipairs(customLogWatchConfig) do
     local watchlogFac = (task.multiline and multilineW or singlelineW)

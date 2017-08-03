@@ -1,7 +1,7 @@
 local util      = require 'util.util'
 local fileutil  = require 'util.fileutil'
 local tableutil = require 'util.tableutil'
-local cjson     = require 'cjson'
+local json      = require 'rapidjson'
 
 local GO_ON = true
 local STOP  = false
@@ -125,7 +125,7 @@ function watchlogfile:handleEvent(kafkaClient, topic, msg)
     local handled = self:parseData(msg)
     self.count = self.count + 1
     if handled then
-        kafkaClient.safeSendMsg(topic, self.tempKafkaKey, cjson.encode(self.EVENT_CONTAINER), 10)
+        kafkaClient.safeSendMsg(topic, self.tempKafkaKey, json.encode(self.EVENT_CONTAINER), 10)
     else
         print(msg)
     end
