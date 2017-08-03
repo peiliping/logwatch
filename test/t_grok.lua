@@ -1,4 +1,4 @@
-local cjson = require 'cjson'
+local json = require 'rapidjson'
 local util  = require 'util.util'
 
 local groks = {
@@ -12,6 +12,6 @@ for _ , val in ipairs(groks) do
 	print("")
 	print("---------- line ----------")
 	print(rule.regex)
-	print(cjson.encode(rule.mapping))
+	print(json.encode(rule.mapping))
 	print("")
 end

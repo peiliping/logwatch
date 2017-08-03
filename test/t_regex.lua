@@ -1,4 +1,4 @@
-local cjson = require 'cjson'
+local json = require 'rapidjson'
 local customParserConfig = require 'conf.parserconfig'
 customParserConfig.init()
 
@@ -53,12 +53,12 @@ end
 local function matchMsg(msgs , rule , container , perf)
     if not perf then
         print(rule.regex)
-        print(cjson.encode(rule.mapping))
+        print(json.encode(rule.mapping))
         print('---------------------------')
     end
     for idx , msg in ipairs(msgs) do
         local handled = parseData(msg , rule , container)
-        local event = cjson.encode(container)
+        local event = json.encode(container)
         if handled then
             if perf then
                 return event

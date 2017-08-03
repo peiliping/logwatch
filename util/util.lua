@@ -1,6 +1,5 @@
 local util = {}
 
-local cjson = require 'cjson'
 local ffi   = require 'ffi'
 
 ffi.cdef[[

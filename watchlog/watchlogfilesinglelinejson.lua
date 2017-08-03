@@ -1,6 +1,6 @@
 local singlelineW = require 'watchlog.watchlogfilesingleline'
 local tableutil = require 'util.tableutil'
-local cjson = require 'cjson'
+local json = require 'rapidjson'
 
 local watchlogfilesinglelinejson = {
     ---- CONSTANTS ----
@@ -19,10 +19,10 @@ function watchlogfilesinglelinejson:new(task, customParserConfig, tunningConfig,
 end
 
 function watchlogfilesinglelinejson:handleEvent(kafkaClient , topic , msg)
-    local status , jsn = pcall(cjson.decode , msg)
+    local status , jsn = pcall(json.decode , msg)
     if status then
         tableutil.simpleCopy(jsn , self.EVENT_CONTAINER)
-        kafkaClient.safeSendMsg(topic , self.tempKafkaKey , cjson.encode(self.EVENT_CONTAINER) , 10)
+        kafkaClient.safeSendMsg(topic , self.tempKafkaKey , json.encode(self.EVENT_CONTAINER) , 10)
     else
         print(msg)
     end

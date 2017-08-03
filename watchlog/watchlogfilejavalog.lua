@@ -1,7 +1,7 @@
 local multilineW = require 'watchlog.watchlogfilemultiline'
 local util = require 'util.util'
 local tableutil = require 'util.tableutil'
-local cjson = require 'cjson'
+local json = require 'rapidjson'
 
 local watchlogfilejavalog = {
     ---- CONSTANTS ----
@@ -37,7 +37,7 @@ function watchlogfilejavalog:handleEventPlus(kafkaClient , topic , msgTable)
                 tmp_content['messageDetail'] = table.concat(msgTable , '\n' , 2)
             end
             tableutil.simpleCopy(tmp_content , self.EVENT_CONTAINER)
-            kafkaClient.safeSendMsg(topic , self.tempKafkaKey  , cjson.encode(tmp_content) , 10)
+            kafkaClient.safeSendMsg(topic , self.tempKafkaKey  , json.encode(tmp_content) , 10)
         else
             print(table.concat(msgTable , '\n'))
         end

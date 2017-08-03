@@ -3,7 +3,8 @@ local kafkaProducer    = require 'rdkafka.producer'
 local kafkaTopicConfig = require 'rdkafka.topic_config'
 local kafkaTopic       = require 'rdkafka.topic'
 
-local util = require 'util.util'
+local util  = require 'util.util'
+local json = require 'rapidjson'
 
 local kafkaclient , topics = {} , {}
 
@@ -28,9 +29,7 @@ function kafkaclient.initKafkaClient(_KafkaConfig , metrics)
     globalConfig:set_delivery_cb(function(payload , err) end)
     globalConfig:set_stat_cb(function(payload) 
         local ts = os.time()
-        for name , metric in pairs(metrics) do
-            print(ts , name , metric)
-        end
+        print(ts , json.encode(metrics))
         print(payload)
     end)
     producer = kafkaProducer.create(globalConfig)
