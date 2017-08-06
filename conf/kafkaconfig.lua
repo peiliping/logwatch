@@ -21,7 +21,7 @@ local config = {
             queue_buffering_max_kbytes = "131072"
         } ,
         topic = {
-            request_required_acks = "1"
+            request_required_acks = "0"
         }
     }
 }
