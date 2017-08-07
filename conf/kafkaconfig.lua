@@ -14,14 +14,14 @@ local config = {
             broker_version_fallback = "0.10.1" ,
             statistics_interval_ms = "60000" ,
             batch_num_messages = "2000" ,
-            compression_codec = "snappy" ,
+            compression_codec = "lz4" ,
             message_max_bytes = "2000000" ,
             queue_buffering_max_ms = "3000" ,
             queue_buffering_max_messages = "16384" ,
             queue_buffering_max_kbytes = "131072"
         } ,
         topic = {
-            request_required_acks = "1"
+            request_required_acks = "0"
         }
     }
 }

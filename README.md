@@ -9,7 +9,7 @@ Logwatch
 
 2. 同类
 
-    Flume、Logstash等
+    Flume、Logstash、Filebeats、Fluentd等
 
 3. 技术
 
@@ -19,7 +19,7 @@ Logwatch
 
     资源占用少(1 cpu core , 128m memory)，性能优异
 
-    测试结果证明，NginxAccessLog每秒可以处理7万行，Java应用Log每秒可以处理20万
+    测试结果:NginxAccessLog(平均长度200字节)，每秒可以处理八万行，Java应用Log每秒可以处理二三十万行以上
 
     通过协程来进行多任务的调度，最多占用1个Cpu Core
 
@@ -35,7 +35,7 @@ Logwatch
 
 3. 编译安装rapidjson(0.5.1)
 
-    将编译好的rapidjson.so放在luajit能够找到的lib路径下即可
+    将编译好的rapidjson.so放在luajit能够找到的lib路径下即可，编译时依赖cmake3
 
 4. 安装luardkafka
 
