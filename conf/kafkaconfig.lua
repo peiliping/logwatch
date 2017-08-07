@@ -18,10 +18,11 @@ local config = {
             message_max_bytes = "2000000" ,
             queue_buffering_max_ms = "3000" ,
             queue_buffering_max_messages = "16384" ,
-            queue_buffering_max_kbytes = "131072"
+            queue_buffering_max_kbytes = "131072" ,
+            socket_blocking_max_ms = "100" ,
         } ,
         topic = {
-            request_required_acks = "0"
+            request_required_acks = "0" ,
         }
     }
 }
