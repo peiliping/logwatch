@@ -1,4 +1,4 @@
-local util = require 'util.util'
+local grok = require 'util.grokutil'
 local MONTHS = {Jan = 1 , Feb = 2 , Mar = 3 , Apr = 4 , May = 5 , Jun =6 , Jul =7  , Aug =8  , Sep =9 , Oct = 10 , Nov = 11 , Dec =12}
 
 local parserconfig = {}
@@ -109,9 +109,9 @@ function parserconfig.init()
         rule.conversion = (rule.conversion and rule.conversion or {})
         rule.conversionByIndex = {}
         if rule.grok then
-            util.grok(rule)
+            grok.base(rule)
             if rule.optimization then
-                util.grokP(rule)
+                grok.plus(rule)
             end
         end
         for index , fdn in ipairs(rule.mapping) do
