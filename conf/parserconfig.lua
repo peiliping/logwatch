@@ -70,7 +70,9 @@ local config = {
         --regex = '"([^"]*)" ([^ ]*) (.-) ([^ ]*) ([^ ]*) ([^ ]*) "([^:]*)://([^"]*)" ([^ ]*) ([^ ]*) "([^"]*)" "(.*)"' ,
         --regex = '"(.-)" (.-) (.-) (.-) (.-) (.-) "(.-)://(.-)" (.-) (.-) "(.-)" "(.*)"'  , 
         --grok = '"$time_local" $remote_addr $upstream_addr $request_time $request_method $status "$scheme://$host$request_uri" $request_length $body_bytes_sent "$http_referer" "$http_user_agent"' ,
+        -- you can name the field by ninja which will be skipped
         --optimization = true , --optimization 4 grok from ungreedy to limit greedy
+        --easysplit = true , -- ignore N * blank
         mapping = {
             "nginx_time" ,
             "remote_ip" ,
