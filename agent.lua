@@ -29,7 +29,7 @@ local function createTask(first, task)
         else
             watchlogFac = (task.jsonLog and jsonlogW or singlelineW)
         end
-        local wtcLogFile = watchlogFac:new(task , customParserConfig , tunningConfig)
+        local wtcLogFile = watchlogFac:new(task , customParserConfig , tunningConfig , first)
         local c = 0 
         while true do
             c = wtcLogFile:readFile(kafkaClient , topic)
