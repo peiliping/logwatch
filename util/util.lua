@@ -40,12 +40,10 @@ end
 function util.grok(rule)
     rule.mapping = {}
     util.escapes4regex(rule)
-    -- handle $time$ip --> $time_ip
-    local t_grokstr , cts = string.gsub(rule.grok , '%$([%a|_]+)%$([%a|_]+)' , function(l , f) return '$' .. l .. '_' .. f end)
+    local t_grokstr , cts = rule.grok , 1
     while cts > 0 do
         t_grokstr , cts = string.gsub(t_grokstr , '%$([%a|_]+)%$([%a|_]+)' , function(l , f) return '$' .. l .. '_' .. f end)
     end
-    -- $time  -->  (.-)  not greedy regex and last one greedy
     local _ , count = string.gsub(t_grokstr , '%$([%a|_]+)' , '(.-)')
     local index = 0 
     rule.regex = string.gsub(t_grokstr , '%$([%a|_]+)' , function(w) 
