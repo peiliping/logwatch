@@ -92,4 +92,4 @@ Logwatch
 
 4. conf/logwatchconfig.lua
 
-    需要根据采集的日志文件情况进行编写，可以参考z_t_logwatchconfig.lua的例子
+    需要根据采集的日志文件情况进行编写，可以参考logwatchconfig.lua的例子
