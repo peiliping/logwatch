@@ -36,19 +36,19 @@ function watchlogfilemultiline:handleMultiLine(kafkaClient, topic)
             if self.multiLineNum < self.MULTILINE_MAX_NUM then
                 table.insert(self.multiLineData , self.postponeBuffer)
             end
-            self.multiLineNum = self.multiLineNum +1
+            self.multiLineNum = self.multiLineNum + 1
         end
     end
 end
 
 function watchlogfilemultiline:handleData(kafkaClient, topic)
+    self.lastFileExist = self.currentNow
     self.tempKafkaKey = self.currentNow .. self.KFK_MSG_KEY_SUFFIX
     for line in self.readerBuffer:gmatch('[^\n]+') do
         if self.postponeBuffer then
             self:handleMultiLine(kafkaClient , topic)
         end
         self.postponeBuffer = line
-        self.count = self.count + 1
     end
     if string.byte(self.readerBuffer , -1) == 10 then
         if self.postponeBuffer then
@@ -62,6 +62,7 @@ function watchlogfilemultiline:handleEventPlus(kafkaClient, topic, msgTable)
     if self.multiLineNum == 1 then
         self:handleEvent(kafkaClient , topic , msgTable[1])
     else
+        self.count = self.count + self.multiLineNum - 1
         self:handleEvent(kafkaClient , topic , table.concat(msgTable , '\n'))
     end
 end
