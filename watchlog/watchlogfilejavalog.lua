@@ -23,6 +23,7 @@ function watchlogfilejavalog:handleEventPlus(kafkaClient , topic , msgTable)
     if self.multiLineNum == 1 then
         self:handleEvent(kafkaClient , topic , msgTable[1])
     else
+        self.count = self.count + self.multiLineNum
         local handled = self:parseData(msgTable[1])
         local tmp_content = {}
         if handled then
