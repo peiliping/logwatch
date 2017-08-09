@@ -2,10 +2,10 @@ install luajit
 
 install luarocks
 
-install cmake
+install cmake3
 
-install lfs
-
-install librdkafka
+install luafilesystem
 
 install rapidjson
+
+install librdkafka
