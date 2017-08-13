@@ -1,5 +1,7 @@
 install luajit
 
+install lua-devel
+
 install luarocks
 
 install cmake3
