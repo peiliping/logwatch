@@ -19,6 +19,7 @@ function watchlogfilesinglelinejson:new(task, customParserConfig, tunningConfig,
 end
 
 function watchlogfilesinglelinejson:handleEvent(kafkaClient , topic , msg)
+    self.count = self.count + 1
     local status , jsn = pcall(json.decode , msg)
     if status then
         tableutil.simpleCopy(jsn , self.EVENT_CONTAINER)
