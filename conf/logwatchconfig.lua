@@ -24,6 +24,14 @@ local config = {
         tags = {type = "app" , app = "user"} ,                                    
         topic = 'test' ,                                                  
     } ,
+    {
+        dirpath = "/home/peiliping/dev/logs/" ,
+        filename = "error.log" ,
+        origin = true ,
+        rule = "errorlog" ,
+        tags = {type = "app" , app = "user"} ,
+        topic = "test"
+    } ,
 }
 function logwatchconfig.getconfig() return config end
 return logwatchconfig
