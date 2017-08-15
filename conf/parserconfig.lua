@@ -66,7 +66,7 @@ local config = {
         optimization = true ,
     } ,
     accesslog = {
-        regex = '"([%d]+/[%a]+/[%d]+:[%d]+:[%d]+:[%d]+ %+0800)" ([%d|%.]+) (.-) ([%d|%.]+) ([%a|%-]+) ([%d]+) "([http|https]+)://([^"]*)" ([%d]+) ([%d]+) "([^"]*)" "(.*)"' ,
+        regex = '"([%d]+/[%a]+/[%d]+:[%d]+:[%d]+:[%d]+ %+0800)" ([%d|%.]+) (.-) ([%d|%.]+) ([%a|%-]+) ([%d]+) "([http|https]+)://([^"]*)" ([%d]+) ([%d]+) "([^"]*)" "([^"]*)"' ,
         --regex = '"([^"]*)" ([^ ]*) (.-) ([^ ]*) ([^ ]*) ([^ ]*) "([^:]*)://([^"]*)" ([^ ]*) ([^ ]*) "([^"]*)" "(.*)"' ,
         --regex = '"(.-)" (.-) (.-) (.-) (.-) (.-) "(.-)://(.-)" (.-) (.-) "(.-)" "(.*)"'  , 
         --grok = '"$time_local" $remote_addr $upstream_addr $request_time $request_method $status "$scheme://$host$request_uri" $request_length $body_bytes_sent "$http_referer" "$http_user_agent"' ,
