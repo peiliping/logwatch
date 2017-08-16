@@ -86,18 +86,19 @@ function build_rapidjson(){
 }
 
 
-function gen_config_lua() {
+function gen_libs_lua() {
     PATH_STR="package.cpath='$BASE/../libs/?.so;'"
     echo $PATH_STR > $BASE/../libs.lua
+    mkdir $BASE/../libs
 }
 
 function main()  {
     echo "build dependences....."
+    gen_libs_lua
     build_luajit
     build_lfs
     build_librdkafk
     build_rapidjson
-    gen_config_lua
 }
 
 function clean(){
